@@ -1,13 +1,11 @@
 import { useState } from "react";
-import EXIF from "exif-js";
 import { Upload } from "lucide-react";
 
 interface ImageDropzoneProps {
-  setImage: (image: string) => void;
-  setExifData: (data: any) => void;
+  onImageDrop: (data: any) => Promise<void>;
 }
 
-const ImageDropzone = ({ setImage, setExifData }: ImageDropzoneProps) => {
+const ImageDropzone = ({ onImageDrop }: ImageDropzoneProps) => {
   const [isDragging, setIsDragging] = useState(false);
 
   const handleDrag = (e: React.DragEvent) => {
@@ -48,27 +46,7 @@ const ImageDropzone = ({ setImage, setExifData }: ImageDropzoneProps) => {
   const processFile = (file: File) => {
     if (!file.type.startsWith("image/")) return;
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      if (e.target?.result) {
-        setImage(e.target.result as string);
-        
-        // Create an image element to properly load the image for EXIF extraction
-        const img = new Image();
-        img.onload = function() {
-          EXIF.getData(img as any, function(this: any) {
-            const exifData = {
-              iso: EXIF.getTag(this, "ISOSpeedRatings"),
-              shutterSpeed: EXIF.getTag(this, "ExposureTime"),
-              aperture: EXIF.getTag(this, "FNumber"),
-            };
-            setExifData(exifData);
-          });
-        };
-        img.src = e.target.result as string;
-      }
-    };
-    reader.readAsDataURL(file);
+    onImageDrop(file);
   };
 
   return (
@@ -77,7 +55,7 @@ const ImageDropzone = ({ setImage, setExifData }: ImageDropzoneProps) => {
       onDragLeave={handleDragOut}
       onDragOver={handleDrag}
       onDrop={handleDrop}
-      className={`w-full max-w-2xl aspect-video rounded-lg border-2 border-dashed transition-colors duration-200 flex flex-col items-center justify-center cursor-pointer ${
+      className={`w-full max-w-2xl aspect-video border-2 border-dashed transition-colors duration-200 flex flex-col items-center justify-center cursor-pointer ${
         isDragging ? "border-blue-500 bg-blue-50" : "border-gray-300 hover:border-gray-400"
       }`}
     >

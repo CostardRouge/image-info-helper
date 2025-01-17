@@ -1,11 +1,9 @@
 import { motion, AnimatePresence } from "framer-motion";
 
+import { ExifData } from "../types/types.ts"
+
 interface ExifInfoProps {
-  exifData: {
-    iso?: number;
-    shutterSpeed?: number;
-    aperture?: number;
-  } | null;
+  exifData: ExifData;
   visible: boolean;
 }
 
