@@ -53,15 +53,19 @@ const ImageDropzone = ({ setImage, setExifData }: ImageDropzoneProps) => {
       if (e.target?.result) {
         setImage(e.target.result as string);
         
-        // Read EXIF data
-        EXIF.getData(file as any, function(this: any) {
-          const exifData = {
-            iso: EXIF.getTag(this, "ISOSpeedRatings"),
-            shutterSpeed: EXIF.getTag(this, "ExposureTime"),
-            aperture: EXIF.getTag(this, "FNumber"),
-          };
-          setExifData(exifData);
-        });
+        // Create an image element to properly load the image for EXIF extraction
+        const img = new Image();
+        img.onload = function() {
+          EXIF.getData(img as any, function(this: any) {
+            const exifData = {
+              iso: EXIF.getTag(this, "ISOSpeedRatings"),
+              shutterSpeed: EXIF.getTag(this, "ExposureTime"),
+              aperture: EXIF.getTag(this, "FNumber"),
+            };
+            setExifData(exifData);
+          });
+        };
+        img.src = e.target.result as string;
       }
     };
     reader.readAsDataURL(file);
