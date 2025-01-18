@@ -13,9 +13,9 @@ const Index = () => {
   const [exifData, setExifData] = useState<ExifData>(null);
   const [showExif, setShowExif] = useState(true);
 
-  console.log({
-    exifData
-  })
+  // console.log({
+  //   exifData
+  // })
 
   const handleImageDrop = (file) => {
     ExifReader
@@ -23,12 +23,24 @@ const Index = () => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
         .then( tags => {
+          console.log(tags)
+
           setExifData({
             iso: tags?.ISOSpeedRatings.description,
-            shutterSpeed: tags?.ExposureTime.description,
-            focalLength: tags?.FocalLength.description,
-            lens: tags?.LensModel.description,
-            model: `${tags?.Make.description} ${tags?.Model.description}`,
+            shutterSpeed: {
+              description: tags?.ExposureTime.description,
+              value: tags?.ExposureTime.value
+            },
+            focalLength: {
+              description: tags?.FocalLength.description,
+              value: tags?.FocalLength.value
+            },
+            // lens: tags?.LensModel.description,
+            lens: tags?.Lens.description,
+            camera: {
+              brand: tags?.Make.description,
+              model: tags?.Model.description
+            },
             // aperture: tags?.ApertureValue.description,
             aperture: tags?.FNumber.description.replace("f/", ""),
             type: tags?.FileType.description,
@@ -39,8 +51,6 @@ const Index = () => {
             }
           });
         })
-
-
 
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -61,11 +71,11 @@ const Index = () => {
             <img
               src={image}
               alt="Uploaded"
-              className="max-w-full max-h-[70vh] object-contain mx-auto shadow-lg"
+              className="max-w-full max-h-[70vh] object-contain mx-auto"
             />
           </div>
           
-          <div className="fixed bottom-0 left-0 right-0 flex justify-between items-center p-6">
+          <div className="flex justify-around items-center p-6">
             <Button
               variant="ghost"
               size="icon"

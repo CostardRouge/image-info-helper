@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Upload } from "lucide-react";
 
 interface ImageDropzoneProps {
-  onImageDrop: (data: any) => Promise<void>;
+  onImageDrop: (data: any) => void;
 }
 
 const ImageDropzone = ({ onImageDrop }: ImageDropzoneProps) => {
