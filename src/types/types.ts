@@ -5,11 +5,14 @@ export type ExifData = {
     description: string,
     value: [number, number],
   },
-  focalLength:  {
+  focalLength: {
     description: string,
     value: [number, number],
   },
-  aperture: string,
+  aperture: {
+    description: string,
+    value: [number, number],
+  },
   type: string,
   lens: string,
   camera: {
