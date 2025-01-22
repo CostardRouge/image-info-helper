@@ -89,13 +89,13 @@ const Index = () => {
   const [image, setImage] = useState<string | null>(null);
   const [exifData, setExifData] = useState<ExifData>(null);
   const [showExif, setShowExif] = useState(true);
-
   // console.log({
   //   exifData
   // })
 
   const handleImageDrop = (file) => {
     setExifData(null);
+    setImage(null);
 
     ExifReader
         .load(file)
@@ -133,19 +133,17 @@ const Index = () => {
           });
         })
 
-    // setImage(file)
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      if (e.target?.result) {
-        setImage(e.target.result as string);
-      }
-    };
-    reader.readAsDataURL(file);
+    if (['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(file.type)) {
+      setImage(URL.createObjectURL(file));
+    }
+    else {
+      setImage(undefined)
+    }
   }
 
   return (
     <ImageDropzone
+      image={image}
       onImageDrop={handleImageDrop}
       className="min-h-screen bg-white flex flex-col items-center justify-center p-4 relative"
     >
@@ -160,31 +158,29 @@ const Index = () => {
       {/*)}*/}
 
       {image && (
-          <>
-            <div className="max-w-4xl w-full relative">
-              <img
-                  src={image}
-                  alt="Uploaded"
-                  className="max-w-full max-h-[70vh] object-contain mx-auto"
-              />
-            </div>
-
-            { exifData && (
-                <div className="flex justify-around items-center p-0">
-                  <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setShowExif(!showExif)}
-                      className="absolute right-6 bottom-6"
-                  >
-                    {showExif ? <EyeOff className="h-5 w-5"/> : <Eye className="h-5 w-5"/>}
-                  </Button>
-
-                  <ExifInfo exifData={exifData} visible={showExif}/>
-                </div>
-            ) }
-          </>
+          <div className="max-w-4xl w-full relative">
+            <img
+                src={image}
+                alt="Uploaded"
+                className="max-w-full max-h-[70vh] object-contain mx-auto"
+            />
+          </div>
       )}
+
+      { exifData && (
+          <div className="flex justify-around items-center p-0">
+            <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowExif(!showExif)}
+                className="absolute right-6 bottom-6"
+            >
+              {showExif ? <EyeOff className="h-5 w-5"/> : <Eye className="h-5 w-5"/>}
+            </Button>
+
+            <ExifInfo exifData={exifData} visible={showExif}/>
+          </div>
+        ) }
     </ImageDropzone>
   );
 };
