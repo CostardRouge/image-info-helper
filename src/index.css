@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -98,4 +100,15 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+html {
+  max-height: 1350px;
+  max-width: 1080px;
+  background-color: hsl(0deg 0% 0%);
+
+  /*font-family: "Raleway", serif;*/
+  /*font-optical-sizing: auto;*/
+  /*font-weight: 400;*/
+  /*font-style: normal;*/
 }

@@ -6,9 +6,10 @@ interface ImageDropzoneProps {
   image: string | null,
   children: React.ReactNode;
   className?: string;
+  onClick: () => void;
 }
 
-const ImageDropzone = ({ image, onImageDrop, className, children }: ImageDropzoneProps) => {
+const ImageDropzone = ({ image, onImageDrop, className, children, onClick }: ImageDropzoneProps) => {
   const [isDragging, setIsDragging] = useState(false);
 
   const handleDrag = (e: React.DragEvent) => {
@@ -58,6 +59,7 @@ const ImageDropzone = ({ image, onImageDrop, className, children }: ImageDropzon
       onDragLeave={handleDragOut}
       onDragOver={handleDrag}
       onDrop={handleDrop}
+      onClick={onClick}
       className={className}
     >
       {image !== null ? children : (

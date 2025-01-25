@@ -145,7 +145,8 @@ const Index = () => {
     <ImageDropzone
       image={image}
       onImageDrop={handleImageDrop}
-      className="min-h-screen bg-white flex flex-col items-center justify-center p-4 relative"
+      onClick={() => setShowExif(!showExif)}
+      className="bg-white flex flex-col items-center justify-center py-16 relative"
     >
       {/*{ image && (*/}
       {/*    <CanvasWithImage*/}
@@ -167,20 +168,9 @@ const Index = () => {
           </div>
       )}
 
-      { exifData && (
-          <div className="flex justify-around items-center p-0">
-            <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowExif(!showExif)}
-                className="absolute right-6 bottom-6"
-            >
-              {showExif ? <EyeOff className="h-5 w-5"/> : <Eye className="h-5 w-5"/>}
-            </Button>
-
-            <ExifInfo exifData={exifData} visible={showExif}/>
-          </div>
-        ) }
+        <div className="absolute bottom-2">
+          <ExifInfo exifData={exifData} visible={showExif} />
+        </div>
     </ImageDropzone>
   );
 };

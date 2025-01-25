@@ -8,7 +8,7 @@ interface ExifInfoProps {
 }
 
 const ExifInfo = ({ exifData, visible }: ExifInfoProps) => {
-  if (![exifData.iso, exifData.shutterSpeed, exifData.aperture].every(Boolean)) return null;
+  if (![exifData?.iso, exifData?.shutterSpeed, exifData?.aperture].every(Boolean)) return null;
 
   const formatFocalLength = (focalLength?: ExifData["focalLength"]) => {
     const [ numerator, denominator ] = focalLength.value;
@@ -42,10 +42,10 @@ const ExifInfo = ({ exifData, visible }: ExifInfoProps) => {
     <AnimatePresence>
       {visible && (
           <motion.div
-              initial={{opacity: 0, y: 20}}
+              initial={{opacity: 0, y: -20}}
               animate={{opacity: 1, y: 0}}
-              exit={{opacity: 0, y: 20}}
-              className="flex gap-8 bg-white px-6 py-3"
+              exit={{opacity: 0, y: -20}}
+              className="flex gap-8 px-6 py-3 text-l"
           >
             <div className="flex items-center gap-2">
               <span className="text-gray-700">{formatFocalLength(exifData.focalLength)}</span>
