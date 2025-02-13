@@ -8,8 +8,13 @@ import takeScreenshot from "./utils/takeScreenshot.js";
 import createBrowserPage from "./utils/createBrowserPage.js";
 import startViteServer, { DEFAULT_VITE_PORT } from "./utils/startViteServer.js";
 
+const HOST = process.env.HOST || '0.0.0.0';
+const API_PORT = process.env.API_PORT || 3000;
+const VITE_PORT = process.env.VITE_PORT || DEFAULT_VITE_PORT;
+
 const app = express();
-const API_PORT = 3000;
+
+app.disable('x-powered-by');
 
 // Setup multer for file uploads
 const upload = multer({
@@ -23,15 +28,10 @@ const upload = multer({
    })
 });
 
-await startViteServer();
-
-// Serve the frontend page
-app.get("/", (req, res) => {
-    res.redirect(`http://localhost:${DEFAULT_VITE_PORT}`);
-});
+await startViteServer(VITE_PORT);
 
 // API: Capture screenshot from uploaded image
-app.post("/screenshot", upload.single("image"), async (req, res) => {
+app.post("/api", upload.single("image"), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: "No file uploaded" });
     }
@@ -43,7 +43,7 @@ app.post("/screenshot", upload.single("image"), async (req, res) => {
         const { browser, page} = await createBrowserPage();
 
         await takeScreenshot({
-            url: `http://localhost:${DEFAULT_VITE_PORT}/?image=${encodeURIComponent(uploadPath)}`,
+            url: `http://${HOST}:${VITE_PORT}/?image=${encodeURIComponent(uploadPath)}`,
             outputPath,
             page
         })
@@ -58,4 +58,6 @@ app.post("/screenshot", upload.single("image"), async (req, res) => {
     }
 });
 
-app.listen(API_PORT, () => console.log(`API Server running on http://localhost:${API_PORT}`));
+app.listen(API_PORT, HOST, () => {
+    console.log(`image-info-helper: POST http://${HOST}:${API_PORT}/api`);
+});
