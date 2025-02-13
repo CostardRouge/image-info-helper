@@ -1,5 +1,3 @@
-import { motion, AnimatePresence } from "framer-motion";
-
 import { ExifData } from "../types/types.ts"
 
 interface ExifInfoProps {
@@ -38,39 +36,33 @@ const ExifInfo = ({ exifData, visible }: ExifInfoProps) => {
     return `ƒ/${fStop}`
   };
 
-  return (
-    <AnimatePresence>
-      {visible && (
-          <motion.div
-              initial={{opacity: 0, y: -20}}
-              animate={{opacity: 1, y: 0}}
-              exit={{opacity: 0, y: -20}}
-              className="flex gap-8 px-6 py-3 text-l"
-          >
-            <div className="flex items-center gap-2">
-              <span className="text-gray-700">{formatFocalLength(exifData.focalLength)}</span>
-            </div>
+  if (visible) {
+    return (
+        <div
+            id="exif-info"
+            className="flex gap-8 pt-8"
+        >
+          <div className="flex items-center">
+            <span className="text-gray-700">{formatFocalLength(exifData.focalLength)}</span>
+          </div>
 
-            <div className="flex items-center gap-2">
-              {/*<span className="text-gray-500 font-medium">Aperture</span>*/}
-              {/*<span className="text-gray-700">{`ƒ/${exifData.aperture}`}</span>*/}
-              <span className="text-gray-700">{formatAperture(exifData.aperture)}</span>
+          <div className="flex items-center">
+            <span className="text-gray-700">{formatAperture(exifData.aperture)}</span>
 
-            </div>
+          </div>
 
-            <div className="flex items-center gap-2">
-              {/*<span className="text-gray-500 font-medium">Shutter</span>*/}
-              <span className="text-gray-700">{formatShutterSpeed(exifData.shutterSpeed)}</span>
-            </div>
+          <div className="flex items-center">
+            <span className="text-gray-700">{formatShutterSpeed(exifData.shutterSpeed)}</span>
+          </div>
 
-            <div className="flex items-center gap-2">
-              {/*<span className="text-gray-500 font-medium">ISO</span>*/}
-              <span className="text-gray-700">ISO {exifData.iso}</span>
-            </div>
-          </motion.div>
-      )}
-    </AnimatePresence>
-  );
+          <div className="flex items-center">
+            <span className="text-gray-700">ISO {exifData.iso}</span>
+          </div>
+        </div>
+    )
+  }
+
+  return null
 };
 
 export default ExifInfo;
